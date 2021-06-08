@@ -1,66 +1,79 @@
 
-import * as React from 'react';
+import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './Screens/HomeScreen'
+import DetailsScreen from './Screens/DetailsScreen'
+import {createDrawerNavigator} from '@react-navigation/drawer'
+import Icon from 'react-native-vector-icons/Ionicons'
 
-function HomeScreen({navigation}) {
+const HomeStack = createStackNavigator();
+const DetailsStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function HomeStackScreen({navigation}){
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button title="Go to details" onPress={() => navigation.navigate("Details")}/>
-    </View>
-  );
+    <HomeStack.Navigator>
+        <HomeStack.Screen name = 'Home' component={HomeScreen}
+        options={{
+          title:'Home',
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 20,
+    
+          },
+          headerTitleAlign: 'center',
+          headerLeft: ()=>(
+            <Icon.Button name="ios-menu" size={30} backgroundColor="#f4511e" 
+              onPress={()=> navigation.openDrawer()}
+            ></Icon.Button>
+          )
+        }}
+        />
+        
+      </HomeStack.Navigator>
+  )
 }
 
-function DetailsScreen({navigation}) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button title="Go to Details screen again" onPress={() => navigation.push("Details")}/>
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")}/>
-      <Button title="Go to details" onPress={() => navigation.goBack()}/>
-      <Button title="Go to details" onPress={() => navigation.popToTop()}/>
-    </View>
-  );
+function DetailsStackScreen({navigation}){
+  return(
+    <DetailsStack.Navigator>
+      <DetailsStack.Screen name = 'Details' component={DetailsScreen}
+          options={{
+            title: 'Details',
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+              
+            },
+            headerTitleAlign:'center',
+            headerLeft: ()=>(
+              <Icon.Button name="ios-menu" size={30} backgroundColor="#f4511e" 
+                onPress={()=> navigation.openDrawer()}
+              ></Icon.Button>
+            )
+          }}
+          />
+      </DetailsStack.Navigator>
+  )
 }
-
-const Stack = createStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name = 'Home' component={HomeScreen}
-        options={{
-          title: 'Home',
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-            fontSize: 20,
-            marginLeft:160
-            
-          },
-        }}
-        />
-        <Stack.Screen name = 'Details' component={DetailsScreen}
-        options={{
-          title: 'Details',
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-            fontSize: 20,
-            marginLeft:100
-          },
-        }}
-        />
-      </Stack.Navigator>
+      <Drawer.Navigator inicialRouteName="Home">
+        <Drawer.Screen name="Home" component={HomeStackScreen}/>
+        <Drawer.Screen name="Details" component={DetailsStackScreen}/>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
